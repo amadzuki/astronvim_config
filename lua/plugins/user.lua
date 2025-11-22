@@ -85,4 +85,11 @@ return {
       )
     end,
   },
+  {
+    "nvimtools/none-ls.nvim",
+    opts = function(_, opts)
+      opts.sources = {} -- Clear all sources
+      return opts
+    end,
+  },
 }

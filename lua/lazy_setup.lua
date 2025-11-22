@@ -13,6 +13,12 @@ require("lazy").setup({
   },
   { import = "community" },
   { import = "plugins" },
+  {
+    "barrett-ruth/live-server.nvim",
+    build = "bun add -g live-server",
+    cmd = { "LiveServerStart", "LiveServerStop" },
+    config = true,
+  },
 } --[[@as LazySpec]], {
   -- Configure any other `lazy.nvim` configuration options here
   install = { colorscheme = { "astrotheme", "habamax" } },

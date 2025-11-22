@@ -1,4 +1,4 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
+-- if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
 
 -- AstroLSP allows you to customize the features in AstroNvim's LSP configuration engine
 -- Configuration documentation can be found with `:h astrolsp`
@@ -25,7 +25,11 @@ return {
           -- "go",
         },
         ignore_filetypes = { -- disable format on save for specified filetypes
-          -- "python",
+          "javascript",
+          "typescript",
+          "javascriptreact",
+          "typescriptreact",
+          "json",
         },
       },
       disabled = { -- disable formatting capabilities for the listed language servers
@@ -33,13 +37,10 @@ return {
         -- "lua_ls",
       },
       timeout_ms = 1000, -- default format timeout
-      -- filter = function(client) -- fully override the default formatting function
-      --   return true
-      -- end
     },
     -- enable servers that you already have installed without mason
     servers = {
-      -- "pyright"
+      biome = {}, -- Biome will be configured here
     },
     -- customize language server configuration options passed to `lspconfig`
     ---@diagnostic disable: missing-fields
@@ -98,8 +99,18 @@ return {
     -- A custom `on_attach` function to be run after the default `on_attach` function
     -- takes two parameters `client` and `bufnr`  (`:h lspconfig-setup`)
     on_attach = function(client, bufnr)
-      -- this would disable semanticTokensProvider for all clients
-      -- client.server_capabilities.semanticTokensProvider = nil
+      -- Auto-fix on save for Biome
+      if client.name == "biome" then
+        vim.api.nvim_create_autocmd("BufWritePre", {
+          buffer = bufnr,
+          callback = function()
+            vim.lsp.buf.code_action {
+              context = { only = { "quickfix.biome" } },
+              apply = true,
+            }
+          end,
+        })
+      end
     end,
   },
 }
