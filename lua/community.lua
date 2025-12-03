@@ -6,7 +6,10 @@
 return {
   "AstroNvim/astrocommunity",
   { import = "astrocommunity.pack.lua" },
+  { import = "astrocommunity.pack.biome" },
+  { import = "astrocommunity.pack.markdown" },
   { import = "astrocommunity.colorscheme.catppuccin" },
+  { import = "astrocommunity.markdown-and-latex.markview-nvim" },
   { import = "astrocommunity.scrolling.cinnamon-nvim" },
   { import = "astrocommunity.utility.live-server-nvim" },
   { import = "astrocommunity.editing-support.conform-nvim" },

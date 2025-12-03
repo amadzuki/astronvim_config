@@ -92,4 +92,63 @@ return {
       return opts
     end,
   },
-  }
+
+  -- Text wrapping configuration for markdown and other text files
+  {
+    "AstroNvim/astrocore",
+    opts = {
+      options = {
+        opt = {
+          -- Global wrap settings
+          wrap = true,           -- Enable line wrapping
+          linebreak = true,      -- Wrap at word boundaries
+          breakindent = true,    -- Preserve indentation in wrapped lines
+          showbreak = "↪ ",      -- Character to show at the beginning of wrapped lines
+        },
+      },
+      autocommands = {
+        -- Set up text wrapping for specific file types
+        {
+          event = { "FileType" },
+          pattern = { "markdown", "text", "gitcommit", "txt" },
+          callback = function()
+            vim.opt_local.wrap = true
+            vim.opt_local.linebreak = true
+            vim.opt_local.breakindent = true
+            vim.opt_local.showbreak = "↪ "
+          end,
+        },
+        -- For code files, keep wrap disabled but enable it temporarily
+        {
+          event = { "FileType" },
+          pattern = { "lua", "python", "javascript", "typescript", "json", "yaml" },
+          callback = function()
+            vim.opt_local.wrap = false
+          end,
+        },
+      },
+      -- Custom keymaps for wrap navigation
+      mappings = {
+        n = {
+          -- Move between wrapped lines
+          ["j"] = { "gj", desc = "Move down (respect wrap)" },
+          ["k"] = { "gk", desc = "Move up (respect wrap)" },
+          ["<Down>"] = { "gj", desc = "Move down (respect wrap)" },
+          ["<Up>"] = { "gk", desc = "Move up (respect wrap)" },
+          -- Toggle wrap
+          ["<leader>tw"] = {
+            function()
+              vim.opt.wrap = not vim.opt.wrap:get()
+              print("Wrap " .. (vim.opt.wrap:get() and "enabled" or "disabled"))
+            end,
+            desc = "Toggle line wrap"
+          },
+          ["<leader>xc"] = {
+            function() vim.fn.setqflist({}) end,
+            desc = "Clear quickfix list"
+          },
+        },
+      },
+    },
+  },
+}
