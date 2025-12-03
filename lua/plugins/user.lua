@@ -131,10 +131,10 @@ return {
       mappings = {
         n = {
           -- Move between wrapped lines
-          ["j"] = { "gj", desc = "Move down (respect wrap)" },
-          ["k"] = { "gk", desc = "Move up (respect wrap)" },
-          ["<Down>"] = { "gj", desc = "Move down (respect wrap)" },
-          ["<Up>"] = { "gk", desc = "Move up (respect wrap)" },
+          ["j"] = { "gj", desc = "Move down (respect wrap)", expr = false },
+          ["k"] = { "gk", desc = "Move up (respect wrap)", expr = false },
+          ["<Down>"] = { "gj", desc = "Move down (respect wrap)", expr = false },
+          ["<Up>"] = { "gk", desc = "Move up (respect wrap)", expr = false },
           -- Toggle wrap
           ["<leader>tw"] = {
             function()
