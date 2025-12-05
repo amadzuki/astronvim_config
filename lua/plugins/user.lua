@@ -45,6 +45,7 @@ return {
   -- You can disable default plugins as follows:
   -- { "max397574/better-escape.nvim", enabled = false },
 
+  
   -- You can also easily customize additional setup of plugins that is outside of the plugin's setup call
   {
     "L3MON4D3/LuaSnip",
@@ -146,6 +147,15 @@ return {
           ["<leader>xc"] = {
             function() vim.fn.setqflist({}) end,
             desc = "Clear quickfix list"
+          },
+        },
+        i = {
+          -- Ctrl+, to trigger completion (alternative to Ctrl+Space)
+          ["<C-,>"] = {
+            function()
+              require('blink.cmp').show()
+            end,
+            desc = "Trigger completion menu"
           },
         },
       },
