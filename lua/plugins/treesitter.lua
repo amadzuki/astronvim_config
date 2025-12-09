@@ -1,4 +1,4 @@
--- if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
+-- WARN: Treesitter configuration is now active
 
 -- Customize Treesitter
 
@@ -10,6 +10,11 @@ return {
       "lua",
       "vim",
       "html",
+      "javascript",
+      "typescript",
+      "tsx",
+      "jsx",
+      "json",
       -- add more arguments for adding more treesitter parsers
     },
   },

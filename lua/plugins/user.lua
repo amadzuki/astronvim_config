@@ -45,7 +45,6 @@ return {
   -- You can disable default plugins as follows:
   -- { "max397574/better-escape.nvim", enabled = false },
 
-  
   -- You can also easily customize additional setup of plugins that is outside of the plugin's setup call
   {
     "L3MON4D3/LuaSnip",
@@ -98,13 +97,16 @@ return {
   {
     "AstroNvim/astrocore",
     opts = {
+      rooter = {
+        autochdir = true,
+      },
       options = {
         opt = {
           -- Global wrap settings
-          wrap = true,           -- Enable line wrapping
-          linebreak = true,      -- Wrap at word boundaries
-          breakindent = true,    -- Preserve indentation in wrapped lines
-          showbreak = "↪ ",      -- Character to show at the beginning of wrapped lines
+          wrap = true, -- Enable line wrapping
+          linebreak = true, -- Wrap at word boundaries
+          breakindent = true, -- Preserve indentation in wrapped lines
+          showbreak = "↪ ", -- Character to show at the beginning of wrapped lines
         },
       },
       autocommands = {
@@ -123,9 +125,7 @@ return {
         {
           event = { "FileType" },
           pattern = { "lua", "python", "javascript", "typescript", "json", "yaml" },
-          callback = function()
-            vim.opt_local.wrap = false
-          end,
+          callback = function() vim.opt_local.wrap = false end,
         },
       },
       -- Custom keymaps for wrap navigation
@@ -142,20 +142,18 @@ return {
               vim.opt.wrap = not vim.opt.wrap:get()
               print("Wrap " .. (vim.opt.wrap:get() and "enabled" or "disabled"))
             end,
-            desc = "Toggle line wrap"
+            desc = "Toggle line wrap",
           },
           ["<leader>xc"] = {
-            function() vim.fn.setqflist({}) end,
-            desc = "Clear quickfix list"
+            function() vim.fn.setqflist {} end,
+            desc = "Clear quickfix list",
           },
         },
         i = {
           -- Ctrl+, to trigger completion (alternative to Ctrl+Space)
           ["<C-,>"] = {
-            function()
-              require('blink.cmp').show()
-            end,
-            desc = "Trigger completion menu"
+            function() require("blink.cmp").show() end,
+            desc = "Trigger completion menu",
           },
         },
       },

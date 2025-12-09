@@ -4,9 +4,11 @@ return {
   event = { "BufReadPre", "BufNewFile" },
   opts = function(_, opts)
     opts.formatters_by_ft = {
-      -- javascript = { "biome" },
-      -- typescript = { "biome" },
-      -- json = { "biome" },
+      javascript = { "biome" },
+      typescript = { "biome" },
+      typescriptreact = { "biome" },
+      javascriptreact = { "biome" },
+      json = { "biome" },
       lua = { "stylua" },
       python = { "isort", "black" },
     }
