@@ -13,5 +13,6 @@ return {
   { import = "astrocommunity.scrolling.cinnamon-nvim" },
   { import = "astrocommunity.utility.live-server-nvim" },
   { import = "astrocommunity.editing-support.conform-nvim" },
+  { import = "astrocommunity.motion.nvim-surround" },
   { import = "astrocommunity.lsp.nvim-lint" },
 }
