@@ -41,6 +41,34 @@ return {
     -- enable servers that you already have installed without mason
     servers = {
       biome = {}, -- Biome will be configured here
+      ts_ls = {
+        root_dir = require("lspconfig.util").root_pattern("tsconfig.json", "jsconfig.json", "package.json", ".git"),
+        single_file_support = false,
+        settings = {
+          typescript = {
+            preferences = {
+              includeCompletionsForModuleExports = true,
+              includeCompletionsWithInsertText = true,
+              includeCompletionsForImportStatements = true,
+              autoImportFileExcludePatterns = { "node_modules/*" },
+            },
+            suggest = {
+              autoImports = true,
+              completeFunctionCalls = true,
+            },
+          },
+          javascript = {
+            preferences = {
+              includeCompletionsForModuleExports = true,
+              includeCompletionsWithInsertText = true,
+              includeCompletionsForImportStatements = true,
+            },
+            suggest = {
+              autoImports = true,
+            },
+          },
+        },
+      },
     },
     -- customize language server configuration options passed to `lspconfig`
     ---@diagnostic disable: missing-fields
@@ -55,6 +83,18 @@ return {
       -- the key is the server that is being setup with `lspconfig`
       -- rust_analyzer = false, -- setting a handler to false will disable the set up of that language server
       -- pyright = function(_, opts) require("lspconfig").pyright.setup(opts) end -- or a custom handler function can be passed
+
+      -- Configure TypeScript Language Server to avoid conflicts with Biome
+      ts_ls = function(_, opts)
+        -- Disable formatting capabilities in ts_ls (let Biome handle it)
+        opts.capabilities = vim.tbl_deep_extend("force", opts.capabilities or {}, {
+          textDocument = {
+            formatting = false,
+            rangeFormatting = false,
+          },
+        })
+        require("lspconfig")["ts_ls"].setup(opts)
+      end,
     },
     -- Configure buffer local auto commands to add when attaching a language server
     autocmds = {
@@ -99,18 +139,8 @@ return {
     -- A custom `on_attach` function to be run after the default `on_attach` function
     -- takes two parameters `client` and `bufnr`  (`:h lspconfig-setup`)
     on_attach = function(client, bufnr)
-      -- Auto-fix on save for Biome
-      if client.name == "biome" then
-        vim.api.nvim_create_autocmd("BufWritePre", {
-          buffer = bufnr,
-          callback = function()
-            vim.lsp.buf.code_action {
-              context = { only = { "quickfix.biome" } },
-              apply = true,
-            }
-          end,
-        })
-      end
+      -- Note: Biome auto-fix on save is disabled to avoid conflicts with conform.nvim formatter
+      -- Import organization will be handled by the formatter when biome.json has organizeImports enabled
     end,
   },
 }

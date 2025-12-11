@@ -93,7 +93,7 @@ return {
     end,
   },
 
-  -- Text wrapping configuration for markdown and other text files
+  -- AstroCore configuration with all settings
   {
     "AstroNvim/astrocore",
     opts = {
@@ -128,7 +128,7 @@ return {
           callback = function() vim.opt_local.wrap = false end,
         },
       },
-      -- Custom keymaps for wrap navigation
+      -- Custom keymaps
       mappings = {
         n = {
           -- Move between wrapped lines
@@ -148,6 +148,89 @@ return {
             function() vim.fn.setqflist {} end,
             desc = "Clear quickfix list",
           },
+          -- Language tools
+          ["<leader>lF"] = {
+            function()
+              -- Try LSP code action first (source.fixAll.biome)
+              local bufnr = vim.api.nvim_get_current_buf()
+              local clients = vim.lsp.get_active_clients { bufnr = bufnr }
+              local biome_found = false
+
+              for _, client in ipairs(clients) do
+                if client.name == "biome" then
+                  biome_found = true
+                  -- Request code action with source.fixAll
+                  local params = vim.lsp.util.make_range_params()
+                  params.context = {
+                    only = { "source.fixAll" },
+                    diagnostics = vim.lsp.diagnostic.get_line_diagnostics(),
+                  }
+
+                  client.request("textDocument/codeAction", params, function(err, result)
+                    if err or not result then
+                      -- Fall back to CLI if LSP fails
+                      goto fallback_cli
+                    end
+
+                    for _, action in ipairs(result) do
+                      if action.kind == "source.fixAll" then
+                        vim.lsp.util.apply_workspace_edit(action.edit, "utf-8")
+                        vim.notify("Biome fixAll applied via LSP", vim.log.levels.INFO)
+                        -- Reload buffer to show changes
+                        vim.cmd "edit"
+                        return
+                      end
+                    end
+
+                    ::fallback_cli::
+                    -- Fallback to biome CLI
+                    local has_biome = vim.fn.executable "biome" == 1
+                    if has_biome then
+                      local filepath = vim.fn.expand "%:p"
+                      local cmd = { "bunx", "--bun", "biome", "lint", "--write", filepath }
+                      vim.fn.jobstart(cmd, {
+                        on_exit = function(_, code, _)
+                          if code == 0 then
+                            vim.notify("Biome lint fixes applied via CLI", vim.log.levels.INFO)
+                            -- Reload buffer to show changes
+                            vim.cmd "checktime"
+                          else
+                            vim.notify("Biome lint fixes failed", vim.log.levels.ERROR)
+                          end
+                        end,
+                      })
+                    else
+                      vim.notify("Biome not found. Please install Biome or ensure it's in PATH", vim.log.levels.WARN)
+                    end
+                  end, bufnr)
+                  break
+                end
+              end
+
+              if not biome_found then
+                -- Direct CLI call if no biome LSP client
+                local has_biome = vim.fn.executable "biome" == 1
+                if has_biome then
+                  local filepath = vim.fn.expand "%:p"
+                  local cmd = { "bunx", "--bun", "biome", "lint", "--write", filepath }
+                  vim.fn.jobstart(cmd, {
+                    on_exit = function(_, code, _)
+                      if code == 0 then
+                        vim.notify("Biome lint fixes applied via CLI", vim.log.levels.INFO)
+                        -- Reload buffer to show changes
+                        vim.cmd "checktime"
+                      else
+                        vim.notify("Biome lint fixes failed", vim.log.levels.ERROR)
+                      end
+                    end,
+                  })
+                else
+                  vim.notify("Biome not found. Please install Biome or ensure it's in PATH", vim.log.levels.WARN)
+                end
+              end
+            end,
+            desc = "Apply safe linting fixes (Biome)",
+          },
         },
         i = {
           -- Ctrl+, to trigger completion (alternative to Ctrl+Space)
@@ -158,5 +241,5 @@ return {
         },
       },
     },
-  },
+  }
 }
