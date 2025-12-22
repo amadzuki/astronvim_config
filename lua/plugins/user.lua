@@ -53,6 +53,12 @@ return {
       -- add more custom luasnip configuration such as filetype extend or custom snippets
       local luasnip = require "luasnip"
       luasnip.filetype_extend("javascript", { "javascriptreact" })
+
+      -- add custom snippet
+      luasnip.config(vim.tbl_deep_extend("force", opts, {
+        paths = { vim.fn.stdpath "config" .. "/snippets" },
+      }))
+      require("luasnip.loaders.from_vscode").lazy_load()
     end,
   },
 
@@ -241,5 +247,5 @@ return {
         },
       },
     },
-  }
+  },
 }

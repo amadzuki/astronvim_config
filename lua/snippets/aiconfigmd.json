@@ -1,0 +1,11 @@
+{
+  "AI Config": {
+    "prefix": "aic",
+    "body": [
+      "---",
+      "name: {$1:what's the config about}",
+      "description: {$2:simple explanation of how and when}"
+    ],
+    "description": "simple header on ai configuration"
+  }
+}
