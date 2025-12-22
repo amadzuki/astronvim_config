@@ -8,6 +8,7 @@ return {
   { import = "astrocommunity.pack.lua" },
   { import = "astrocommunity.pack.biome" },
   { import = "astrocommunity.pack.markdown" },
+  { import = "astrocommunity.pack.tailwindcss" },
   { import = "astrocommunity.colorscheme.catppuccin" },
   { import = "astrocommunity.markdown-and-latex.markview-nvim" },
   { import = "astrocommunity.scrolling.cinnamon-nvim" },
