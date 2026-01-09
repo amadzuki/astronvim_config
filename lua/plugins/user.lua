@@ -1,4 +1,4 @@
--- if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
+-- WARN: This file is now active
 
 -- You can also add or configure plugins by creating files in this `plugins/` folder
 -- PLEASE REMOVE THE EXAMPLES YOU HAVE NO INTEREST IN BEFORE ENABLING THIS FILE
@@ -31,13 +31,44 @@ return {
             "██   ██      ██    ██    ██   ██ ██    ██",
             "██   ██ ███████    ██    ██   ██  ██████ ",
             "",
-            "███    ██ ██    ██ ██ ███    ███",
-            "████   ██ ██    ██ ██ ████  ████",
-            "██ ██  ██ ██    ██ ██ ██ ████ ██",
-            "██  ██ ██  ██  ██  ██ ██  ██  ██",
-            "██   ████   ████   ██ ██      ██",
+            "███   ██ ██   ██ ████   ███",
+            "████  ██ ██   ██ ██████ ████",
+            "██ ██ ██ ██   ██ ██ ██████ ██",
+            "██  ██ ██  ██  ██ ██  ██  ██",
+            "██   ███   ███   ██ ██     ██",
           }, "\n"),
         },
+      },
+      -- Configure picker to search from current directory by default
+      picker = vim.tbl_deep_extend("force", {
+        -- Use current directory for file searches
+        files = {
+          dirs = { vim.fn.getcwd() },
+        },
+        -- Use current directory for grep searches
+        grep = {
+          dirs = { vim.fn.getcwd() },
+        },
+      }, {}),
+    },
+  },
+
+  -- Neo-tree configuration to use current directory
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    opts = {
+      filesystem = {
+        -- Use the current directory where nvim was opened
+        rootizers = {
+          -- Only use explicit project markers, not parent directories
+          ".git",
+          "package.json",
+          "tsconfig.json",
+          "jsconfig.json",
+          ".gitignore",
+        },
+        -- Don't scan parent directories
+        scan_mode = "shallow",
       },
     },
   },
@@ -105,6 +136,9 @@ return {
     opts = {
       rooter = {
         autochdir = true,
+        -- Use the current directory as fallback when no project markers are found
+        -- This prevents it from going up to home directory
+        fallback = vim.fn.getcwd,
       },
       options = {
         opt = {
