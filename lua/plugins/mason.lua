@@ -17,7 +17,7 @@ return {
 
         -- install formatters
         "stylua",
-
+        "texlab",
         -- install debuggers
         "debugpy",
 

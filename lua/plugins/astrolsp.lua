@@ -41,6 +41,7 @@ return {
     -- enable servers that you already have installed without mason
     servers = {
       biome = {}, -- Biome will be configured here
+      texlab = {}, -- LaTeX language server
       ts_ls = {
         root_dir = require("lspconfig.util").root_pattern("tsconfig.json", "jsconfig.json", "package.json", ".git"),
         single_file_support = false,
