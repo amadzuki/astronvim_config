@@ -165,7 +165,13 @@ return {
         {
           event = { "FileType" },
           pattern = { "lua", "python", "javascript", "typescript", "json", "yaml" },
-          callback = function() vim.opt_local.wrap = false end,
+          callback = function()
+            vim.opt_local.wrap = false
+            -- Disable concealing for JSON to show quotes
+            if vim.bo.filetype == "json" then
+              vim.opt_local.conceallevel = 0
+            end
+          end,
         },
       },
       -- Custom keymaps
