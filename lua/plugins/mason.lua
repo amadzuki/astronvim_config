@@ -14,10 +14,17 @@ return {
         -- install language servers
         "lua-language-server",
         "typescript-language-server",
+        "basedpyright", -- Python LSP (faster than pyright)
 
         -- install formatters
         "stylua",
         "texlab",
+        "black", -- Python formatter
+        "isort", -- Python import sorter
+
+        -- install linters
+        "pylint", -- Python linter
+
         -- install debuggers
         "debugpy",
 
